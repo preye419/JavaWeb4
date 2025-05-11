@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // Replace with your Docker Hub credentials
-        DOCKER_HUB_CREDS = credentials('dockerhub-credentials') // replace with your credentials ID in Jenkins
-        DOCKER_IMAGE = "preye419/java-web-calculator:${BUILD_NUMBER}" // replace with your Docker Hub repo name
+        // Replace with your Docker Hub credentials ID in Jenkins
+        DOCKER_HUB_CREDS = credentials('dockerhub-credentials')
+        DOCKER_IMAGE = "preye419/java-web-calculator:${BUILD_NUMBER}"
     }
 
     stages {
@@ -16,7 +16,6 @@ pipeline {
 
         stage('Build Application') {
             steps {
-                // Replace with your specific Maven build command
                 sh 'mvn -Dmaven.compiler.source=17 -Dmaven.compiler.target=17 clean package -DskipTests'
             }
         }
@@ -29,14 +28,12 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                // Build Docker image
                 sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                // Docker login and push
                 sh '''
                     echo "$DOCKER_HUB_CREDS_PSW" | docker login -u "$DOCKER_HUB_CREDS_USR" --password-stdin
                     docker push "$DOCKER_IMAGE"
@@ -46,7 +43,6 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Docker deploy
                 sh '''
                     docker stop calculator-app || echo "Calculator app was not running"
                     docker rm calculator-app || echo "Calculator app was not removed"
@@ -58,10 +54,7 @@ pipeline {
 
     post {
         always {
-            // Wrap Docker logout in a node block with a label
-            node('your-agent-label') {
-                sh 'docker logout || true'
-            }
+            sh 'docker logout || true'
         }
     }
 }
