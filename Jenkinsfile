@@ -58,8 +58,8 @@ pipeline {
 
     post {
         always {
-            // Wrap Docker logout in a node block
-            node {
+            // Wrap Docker logout in a node block with a label
+            node('your-agent-label') {
                 sh 'docker logout || true'
             }
         }
