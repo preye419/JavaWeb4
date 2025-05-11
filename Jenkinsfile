@@ -58,8 +58,10 @@ pipeline {
 
     post {
         always {
-            // Docker logout
-            sh 'docker logout || true'
+            // Wrap Docker logout in a node block
+            node {
+                sh 'docker logout || true'
+            }
         }
     }
 }
