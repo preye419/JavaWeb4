@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git url: 'https://github.com/preye419/JavaWeb4.git'
+                git branch: 'main', url: 'https://github.com/preye419/JavaWeb4.git'
             }
         }
 
